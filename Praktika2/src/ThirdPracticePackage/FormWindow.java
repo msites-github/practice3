@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class FormWindow extends JFrame {
+private class FormWindow extends JFrame {
     JLabel label1, label2, label3, label4;
     JTextField text1, text2, text3;
     JButton btn1, btn2;
@@ -12,7 +12,7 @@ public class FormWindow extends JFrame {
     String b;
     SomeActions action = new SomeActions();
 
-    public FormWindow(String name) {
+    private FormWindow(String name) {
         super(name);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new FlowLayout());
@@ -37,7 +37,7 @@ public class FormWindow extends JFrame {
         btn2.addActionListener(action);
     }
 
-    public class SomeActions implements ActionListener {
+    private class SomeActions implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
                 if ((e.getSource()) == btn2) {
