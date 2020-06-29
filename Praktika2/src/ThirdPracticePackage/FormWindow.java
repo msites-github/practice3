@@ -2,60 +2,81 @@ package ThirdPracticePackage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-private class FormWindow extends JFrame {
-    JLabel label1, label2, label3, label4;
-    JTextField text1, text2, text3;
-    JButton btn1, btn2;
-    double d ,c, resultS;
-    String b;
-    SomeActions action = new SomeActions();
+public class FormWindow extends JFrame {
+    private final String NUMBER_OF_TRIES = "Введите количество попыток : ";
+    private final String ENTER_VALUE = "Введите значения d: ";
 
-    private FormWindow(String name) {
+    private final String CLEAR_DATA = "Стереть данные";
+    private final String COUNT_SIZE = "Подсчитать площадь";
+    private static final String DRAW = "Нарисовать фигуру";
+
+    private JLabel label1 = new JLabel(ENTER_VALUE);
+    private JLabel label2 = new JLabel(NUMBER_OF_TRIES);
+    private static JLabel resultLabel = new JLabel("");
+
+    private JTextField  numberOfTries = new JTextField(10);
+
+    private JButton clearBtn = new JButton(CLEAR_DATA);
+    private JButton drawBtn = new JButton(DRAW);
+    private JButton countBtn = new JButton(COUNT_SIZE);
+
+    private double radius ,c, resultS;
+    private String b;
+    private SomeActions action = new SomeActions();
+
+    public FormWindow(String name) {
         super(name);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new FlowLayout());
-        setSize(400, 200);
+        setSize(800, 400);
         setResizable(false);
         setLocationRelativeTo(null);
-        label1 = new JLabel("Введите значения d: ");
-        label2 = new JLabel("Введите количество попыток : ");
-        label3 = new JLabel("");
-        text1 = new JTextField(10);
-        text2 = new JTextField(10);
-        btn1 = new JButton("Стереть данные");
-        btn2 = new JButton("Подсчитать площадь");
-        add(label1);
-        add(text1);
+        addElements();
+        addCustomListeners();
+    }
+
+    private void addCustomListeners() {
+        clearBtn.addActionListener(action);
+        countBtn.addActionListener(action);
+        drawBtn.addActionListener(action);
+    }
+
+    private void addElements() {
         add(label2);
-        add(text2);
-        add(btn1);
-        add(btn2);
-        add(label3);
-        btn1.addActionListener(action);
-        btn2.addActionListener(action);
+        add(numberOfTries);
+        add(clearBtn);
+        add(countBtn);
+        add(resultLabel);
+        add(drawBtn);
     }
 
     private class SomeActions implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent actionEvent) {
             try {
-                if ((e.getSource()) == btn2) {
-                    d = Double.parseDouble(text1.getText());
-                    resultS = 0.25 * 3.14 * d * d;
-                    label3.setText("Площадь круга: " + resultS);
+                if ((actionEvent.getSource()) == countBtn) {
+                    int number = Integer.parseInt(numberOfTries.getText());
+                    if (number < 1) {
+                        throw new Exception();
+                    }
+                    CountForm form = new CountForm("Form", number);
+                    form.setVisible(true);
                 }
-
-                if ((e.getSource()) == btn1) {
-                    text1.setText("");
-                    //text2.setText("");
-                    label3.setText("");
-                    d = 0;
+                if ((actionEvent.getSource()) == clearBtn) {
+                    numberOfTries.setText("");
                 }
-            } catch (Exception err) {
+                if((actionEvent.getSource()) == drawBtn) {
+                    new Draw().setVisible(true);
+                }
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null,"Введите корректные значения!");
             }
         }
     }
 
+    public static void showResults() {
+        resultLabel.setText("Последний результат: " + Storage.getInstance().getLast());
+    }
 }
